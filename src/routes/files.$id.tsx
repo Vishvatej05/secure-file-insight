@@ -44,7 +44,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
-function List({ title, items }: { title: string; items?: string[] }) {
+function List({ title, items }: { title: string; items?: string[] | undefined }) {
   if (!items?.length) return null;
   return (
     <div>
