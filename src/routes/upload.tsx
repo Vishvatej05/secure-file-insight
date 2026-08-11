@@ -90,7 +90,7 @@ function UploadPage() {
 
         await supabase.from("analyses").insert({
           file_id: inserted.id,
-          extracted_content: {
+          extracted_content: JSON.parse(JSON.stringify({
             text: report.extraction.text,
             truncated: report.extraction.truncated,
             tables: report.extraction.tables,
@@ -98,14 +98,14 @@ function UploadPage() {
             notes: report.extraction.notes,
             unsupported: report.extraction.unsupported ?? false,
             error: report.extraction.error ?? null,
-          },
-          metadata: {
+          })),
+          metadata: JSON.parse(JSON.stringify({
             stats: report.extraction.stats,
             metadata: report.extraction.metadata,
             evidence: report.detection.evidence,
             headerHex: report.binary.headerHex,
             printableRatio: report.binary.printableRatio,
-          },
+          })),
         });
 
         setStage("ai");
@@ -124,7 +124,7 @@ function UploadPage() {
               notes: report.extraction.notes.slice(0, 20),
             },
           });
-          await supabase.from("analyses").update({ summary }).eq("file_id", inserted.id);
+          await supabase.from("analyses").update({ summary: JSON.parse(JSON.stringify(summary)) }).eq("file_id", inserted.id);
         } catch (aiError) {
           toast.warning(aiError instanceof Error ? aiError.message : "AI analysis failed — the forensic report is still available.");
         }
